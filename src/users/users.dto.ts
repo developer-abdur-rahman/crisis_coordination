@@ -1,4 +1,5 @@
 import {
+  IsDefined,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -6,14 +7,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserRole } from 'src/common/enums/userRole.enum';
 
-export enum registerUserRole {
-  VICTIM = 'VICTIM',
-  VOLUNTEER = 'VOLUNTEER',
-}
-
-export class RegisterDto {
-  @IsNotEmpty()
+export class CreateUserDto {
+  @IsDefined()
   @IsString()
   @MinLength(4)
   @MaxLength(40)
@@ -29,6 +26,6 @@ export class RegisterDto {
   password: string;
 
   @IsNotEmpty()
-  @IsEnum(registerUserRole)
-  role: registerUserRole;
+  @IsEnum(UserRole)
+  role: UserRole;
 }
