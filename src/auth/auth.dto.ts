@@ -8,8 +8,8 @@ import {
 } from 'class-validator';
 
 export enum registerUserRole {
-  USER,
-  VOLUNTEER,
+  VICTIM = 'VICTIM',
+  VOLUNTEER = 'VOLUNTEER',
 }
 
 export class RegisterDto {
