@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User.entity';
 import { Repository } from 'typeorm';
 import { UserRole } from 'src/common/enums/userRole.enum';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -20,12 +21,23 @@ export class UsersService {
       throw new HttpException('Invalid user role', 400);
     }
 
-    const user = this.userRepo.create({
+    const salt = await bcrypt.genSalt();
+
+    const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+
+    const userPromise = this.userRepo.create({
       name: createUserDto.name,
       email: createUserDto.email,
-      password: createUserDto.password,
+      password: hashedPassword,
       role: createUserDto.role,
     });
-    return await this.userRepo.save(user);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = await this.userRepo.save(userPromise);
+    return user;
+  }
+
+  async findOne(email: string) {
+    return await this.userRepo.findOne({ where: { email: email } });
   }
 }
