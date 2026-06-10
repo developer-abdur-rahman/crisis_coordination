@@ -4,7 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,9 +32,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Request, (request) => request.createdBy)
+  @OneToMany(() => Request, (request) => request.createdBy)
   createdRequests: Request[];
 
-  @ManyToOne(() => Request, (request) => request.claimedBy)
+  @OneToMany(() => Request, (request) => request.claimedBy)
   claimedRequest: Request[];
 }

@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './users.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller({
   version: '1',
@@ -18,6 +19,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.createUser(createUserDto);
