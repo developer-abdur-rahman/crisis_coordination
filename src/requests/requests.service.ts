@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { User } from 'src/users/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from './entities/request.entity';
 import { RequestStatus } from 'src/common/enums/RequestStatus.enum';
+import { UserRole } from 'src/common/enums/userRole.enum';
 
 @Injectable()
 export class RequestsService {
@@ -18,6 +19,14 @@ export class RequestsService {
   ) {}
 
   async create(createRequestDto: CreateRequestDto, user) {
+    const userData = await this.userRepo.findOneBy({ id: user.sub });
+
+    if (!userData || userData.role !== UserRole.VICTIM)
+      throw new HttpException(
+        'User does not have the permission',
+        HttpStatus.FORBIDDEN,
+      );
+
     const requestPromise = this.requestRepo.create({
       title: createRequestDto.title,
       description: createRequestDto.description,

@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './users.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { Public } from 'src/decorators/public.decorator';
 
 @Controller({
@@ -25,7 +24,6 @@ export class UsersController {
     return await this.usersService.createUser(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
   @Get('me')
   async getProfile(@Request() request) {
     const { password, ...user } = await this.usersService.findOne(
