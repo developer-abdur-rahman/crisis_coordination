@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RequestsModule } from './requests/requests.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,6 +21,6 @@ import { RequestsModule } from './requests/requests.module';
     RequestsModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

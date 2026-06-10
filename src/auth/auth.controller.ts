@@ -2,6 +2,7 @@ import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from 'src/auth/auth.dto';
 import type { Response } from 'express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller({
   version: '1',
@@ -9,6 +10,8 @@ import type { Response } from 'express';
 })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Public()
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,

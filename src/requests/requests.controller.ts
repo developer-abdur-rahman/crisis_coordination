@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller({
   version: '1',
@@ -18,8 +20,9 @@ import { UpdateRequestDto } from './dto/update-request.dto';
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createRequestDto: CreateRequestDto) {
+  create(@Body() createRequestDto: CreateRequestDto, ) {
     return this.requestsService.create(createRequestDto);
   }
 
