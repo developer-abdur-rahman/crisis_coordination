@@ -1,8 +1,10 @@
 import { UserRole } from 'src/common/enums/userRole.enum';
+import { Request } from 'src/requests/entities/request.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,10 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Request, (request) => request.createdBy)
+  createdRequests: Request[];
+
+  @ManyToOne(() => Request, (request) => request.claimedBy)
+  claimedRequest: Request[];
 }

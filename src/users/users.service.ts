@@ -1,4 +1,5 @@
-import { HttpException, Injectable } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User.entity';
@@ -32,12 +33,23 @@ export class UsersService {
       role: createUserDto.role,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.userRepo.save(userPromise);
     return user;
   }
 
   async findOne(email: string) {
-    return await this.userRepo.findOne({ where: { email: email } });
+    if (!email)
+      throw new HttpException(
+        'Email does not provided',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const user = await this.userRepo.findOne({
+      where: { email: email },
+    });
+
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    return user;
   }
 }
