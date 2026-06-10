@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsDefined,
   IsEmail,
@@ -29,3 +30,5 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   role: UserRole;
 }
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}

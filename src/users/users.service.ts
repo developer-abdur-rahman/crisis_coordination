@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './users.dto';
+import { CreateUserDto, UpdateUserDto } from './users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User.entity';
 import { Repository } from 'typeorm';
@@ -37,6 +37,11 @@ export class UsersService {
     return user;
   }
 
+  async findAll() {
+    const users = await this.userRepo.find();
+    return users;
+  }
+
   async findOne(email: string) {
     if (!email)
       throw new HttpException(
@@ -51,5 +56,31 @@ export class UsersService {
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     return user;
+  }
+
+  async updateUser(user, body: UpdateUserDto) {
+    if (user.role !== UserRole.ADMIN && body.role)
+      throw new HttpException(
+        "You can't change your role dude.",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    if (body.email)
+      throw new HttpException(
+        "You can't change these fields.",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const updatedUser = await this.userRepo.update(
+      { id: user.sub },
+      { ...body },
+    );
+
+    return updatedUser;
+  }
+
+  async delete(param) {
+    await this.userRepo.delete({ id: param.id });
+    return true;
   }
 }

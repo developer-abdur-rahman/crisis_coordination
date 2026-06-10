@@ -41,8 +41,30 @@ export class RequestsService {
     return request;
   }
 
-  findAll() {
-    return `This action returns all requests`;
+  async findAll(user) {
+    const query = this.requestRepo
+      .createQueryBuilder('request')
+      .leftJoinAndSelect('request.createdBy', 'createdBy')
+      .leftJoinAndSelect('request.claimedBy', 'claimedBy');
+
+    switch (user.role) {
+      case UserRole.VOLUNTEER:
+        query.where('request.status = :status', {
+          status: RequestStatus.OPEN,
+        });
+        break;
+
+      case UserRole.VICTIM:
+        query.where('request.createdById = :userId', {
+          userId: user.sub,
+        });
+        break;
+
+      case UserRole.ADMIN:
+        break;
+    }
+
+    return query.getMany();
   }
 
   findOne(id: number) {

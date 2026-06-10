@@ -11,6 +11,8 @@ import {
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { UserRole } from 'src/common/enums/userRole.enum';
 
 @Controller({
   version: '1',
@@ -25,9 +27,11 @@ export class RequestsController {
     return await this.requestsService.create(createRequestDto, user);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.COORDINATOR, UserRole.VOLUNTEER)
   @Get()
-  findAll() {
-    return this.requestsService.findAll();
+  async findAll(@Req() request) {
+    const user = request.user;
+    return await this.requestsService.findAll(user);
   }
 
   @Get(':id')
