@@ -21,6 +21,7 @@ import { UserRole } from 'src/common/enums/userRole.enum';
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
 
+  @Roles(UserRole.VICTIM)
   @Post()
   async create(@Body() createRequestDto: CreateRequestDto, @Req() request) {
     const user = request.user;
@@ -34,14 +35,44 @@ export class RequestsController {
     return await this.requestsService.findAll(user);
   }
 
+  @Roles(UserRole.VOLUNTEER)
+  @Post('/claim/:id')
+  async claimRequest(@Req() request) {
+    const id = request?.params?.id;
+    const user = request.user;
+    return await this.requestsService.claimRequest(user, id);
+  }
+
+  @Roles(UserRole.VOLUNTEER, UserRole.ADMIN, UserRole.COORDINATOR)
+  @Post('/start/:id')
+  async startRequest(@Req() request) {
+    const id = request?.params?.id;
+    const user = request.user;
+    return await this.requestsService.startRequest(user, id);
+  }
+
+  @Roles(UserRole.VOLUNTEER)
+  @Post('/resolve/:id')
+  async resolveRequest(@Req() request) {
+    const id = request?.params?.id;
+    const user = request.user;
+    return await this.requestsService.resolveRequest(user, id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.requestsService.findOne(+id);
   }
 
+  @Roles(UserRole.ADMIN, UserRole.VICTIM)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto) {
-    return this.requestsService.update(+id, updateRequestDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateRequestDto: UpdateRequestDto,
+    @Req() request,
+  ) {
+    const user = request.user;
+    return await this.requestsService.update(id, updateRequestDto, user);
   }
 
   @Delete(':id')

@@ -35,8 +35,8 @@ Can:
 
 - Register/Login - ✅
 - View open requests - ✅
-- Claim requests
-- Mark requests as resolved
+- Claim requests - ✅
+- Mark requests as resolved - ✅
 - Receive notifications
 
 ## Coordinator
@@ -79,9 +79,9 @@ Only Coordinators and Admins can manually override statuses.
 
 Endpoints:
 
-POST /auth/register
+POST /auth/register - ✅
 
-POST /auth/login
+POST /auth/login - ✅
 
 POST /auth/refresh
 
@@ -126,15 +126,15 @@ Fields:
 
 Endpoints:
 
-POST /requests
+POST /requests - ✅
 
-GET /requests
+GET /requests - ✅
 
 GET /requests/
 
-PATCH /requests/
+PATCH /requests/ - ✅
 
-DELETE /requests/
+DELETE /requests/ - ✔️
 
 Fields:
 
@@ -168,17 +168,17 @@ Status:
 
 Endpoints:
 
-POST /requests//claim
+POST /requests//claim - ✅
 
-POST /requests//start
+POST /requests//start - ✅
 
-POST /requests//resolve
+POST /requests//resolve - ✅
 
 Business Rules:
 
-- Only volunteers can claim
-- Claimed request cannot be claimed again
-- Resolver must be claimant
+- Only volunteers can claim - ✅
+- Claimed request cannot be claimed again - ✅
+- Resolver must be claimant - ✅
 
 ---
 

@@ -67,12 +67,80 @@ export class RequestsService {
     return query.getMany();
   }
 
+  async claimRequest(user, id) {
+    const request = await this.requestRepo.findOneBy({ id });
+
+    if (request?.status !== RequestStatus.OPEN)
+      throw new HttpException(
+        'This request already claimed',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    request.status = RequestStatus.CLAIMED;
+    request.claimedById = user.sub;
+
+    await this.requestRepo.save(request);
+  }
+
+  async startRequest(user, id) {
+    const request = await this.requestRepo.findOneBy({ id });
+
+    if (request?.status !== RequestStatus.CLAIMED)
+      throw new HttpException(
+        'This request Does not claimed yet or already resolved.',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    request.status = RequestStatus.IN_PROGRESS;
+
+    await this.requestRepo.save(request);
+    return true;
+  }
+
+  async resolveRequest(user, id) {
+    const request = await this.requestRepo.findOneBy({ id });
+
+    console.log({ request: request?.status });
+
+    if (request?.status !== RequestStatus.IN_PROGRESS)
+      throw new HttpException(
+        'This request Does not start yet',
+        HttpStatus.BAD_REQUEST,
+      );
+    if (request.claimedById !== user.sub)
+      throw new HttpException(
+        'You do not anuthz to resolve this request',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    request.status = RequestStatus.IN_PROGRESS;
+
+    await this.requestRepo.save(request);
+    return true;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} request`;
   }
 
-  update(id: number, updateRequestDto: UpdateRequestDto) {
-    return `This action updates a #${id} request`;
+  async update(id: string, updateRequestDto: UpdateRequestDto, user) {
+    const request = await this.requestRepo.findOneBy({ id });
+
+    if (request?.createdById !== user.sub && user.role !== UserRole.ADMIN)
+      throw new HttpException("You aren't authz", HttpStatus.BAD_REQUEST);
+
+    if (request?.status && user.role !== UserRole.ADMIN)
+      throw new HttpException(
+        "You can't change the status",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const updatedRequest = await this.requestRepo.update(
+      { id },
+      { ...updateRequestDto },
+    );
+
+    return updatedRequest;
   }
 
   remove(id: number) {
