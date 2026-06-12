@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from './entities/request.entity';
 import { RequestStatus } from 'src/common/enums/RequestStatus.enum';
 import { UserRole } from 'src/common/enums/userRole.enum';
+import { RealtimeService } from 'src/realtime/realtime.service';
 
 @Injectable()
 export class RequestsService {
@@ -16,6 +17,8 @@ export class RequestsService {
 
     @InjectRepository(Request)
     private readonly requestRepo: Repository<Request>,
+
+    private readonly realtimeService: RealtimeService,
   ) {}
 
   async create(createRequestDto: CreateRequestDto, user) {
@@ -37,6 +40,8 @@ export class RequestsService {
     });
 
     const request = await this.requestRepo.save(requestPromise);
+
+    this.realtimeService.notifyRequestCreation(request);
 
     return request;
   }
@@ -78,6 +83,8 @@ export class RequestsService {
 
     request.status = RequestStatus.CLAIMED;
     request.claimedById = user.sub;
+
+    this.realtimeService.notifyRequestClaimed(request);
 
     await this.requestRepo.save(request);
   }
