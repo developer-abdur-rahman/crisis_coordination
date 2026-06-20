@@ -23,9 +23,9 @@ This project is backend-only and serves as a learning project for NestJS.
 
 Can:
 
-- Register/Login
-- Create emergency requests
-- View own requests
+- Register/Login - ✅
+- Create emergency requests - ✅
+- View own requests - ✅
 - Upload evidence/images
 - Receive notifications
 
@@ -33,17 +33,17 @@ Can:
 
 Can:
 
-- Register/Login
-- View open requests
-- Claim requests
-- Mark requests as resolved
+- Register/Login - ✅
+- View open requests - ✅
+- Claim requests - ✅
+- Mark requests as resolved - ✅
 - Receive notifications
 
 ## Coordinator
 
 Can:
 
-- View all requests
+- View all requests - ✅
 - Reassign requests
 - Change priorities
 - Monitor system activity
@@ -52,7 +52,7 @@ Can:
 
 Can:
 
-- Manage users
+- Manage users  - ✅
 - View system statistics
 - Access all resources
 
@@ -79,9 +79,9 @@ Only Coordinators and Admins can manually override statuses.
 
 Endpoints:
 
-POST /auth/register
+POST /auth/register - ✅
 
-POST /auth/login
+POST /auth/login - ✅
 
 POST /auth/refresh
 
@@ -100,16 +100,16 @@ Requirements:
 
 Endpoints:
 
-GET /users/me
+GET /users/me - ✅
 
-GET /users/
+GET /users/ - ✅
 
-PATCH /users/me
+PATCH /users/me - ✅
 
-GET /users
+GET /users - ✅
 
 Admin only:
-DELETE /users/
+DELETE /users/ - ✅
 
 Fields:
 
@@ -126,15 +126,15 @@ Fields:
 
 Endpoints:
 
-POST /requests
+POST /requests - ✅
 
-GET /requests
+GET /requests - ✅
 
 GET /requests/
 
-PATCH /requests/
+PATCH /requests/ - ✅
 
-DELETE /requests/
+DELETE /requests/ - ✔️
 
 Fields:
 
@@ -168,17 +168,17 @@ Status:
 
 Endpoints:
 
-POST /requests//claim
+POST /requests//claim - ✅
 
-POST /requests//start
+POST /requests//start - ✅
 
-POST /requests//resolve
+POST /requests//resolve - ✅
 
 Business Rules:
 
-- Only volunteers can claim
-- Claimed request cannot be claimed again
-- Resolver must be claimant
+- Only volunteers can claim - ✅
+- Claimed request cannot be claimed again - ✅
+- Resolver must be claimant - ✅
 
 ---
 
